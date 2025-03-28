@@ -1,0 +1,2082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeoShop - Premium E-commerce</title>
+    <style>
+        /* Base Styles */
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #00d2d3;
+            --accent: #ff7675;
+            --dark: #121212;
+            --darker: #0a0a0a;
+            --dark-card: #1e1e1e;
+            --text: #f5f5f5;
+            --text-secondary: #a0a0a0;
+            --radius: 12px;
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--dark);
+            color: var(--text);
+            overflow-x: hidden;
+        }
+        
+        /* Animation Keyframes */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideInLeft {
+            from { transform: translateX(-100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(1deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        
+        @keyframes glow {
+            0% { box-shadow: 0 0 5px rgba(108, 92, 231, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(108, 92, 231, 0.8); }
+            100% { box-shadow: 0 0 5px rgba(108, 92, 231, 0.5); }
+        }
+        
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: rgba(18, 18, 18, 0.8);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+            transition: var(--transition);
+            padding: 15px 0;
+        }
+        
+        header.scrolled {
+            padding: 10px 0;
+            background-color: rgba(10, 10, 10, 0.95);
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .logo span {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-left: 5px;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 40px;
+        }
+        
+        .nav-links li {
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
+        
+        .nav-links li:nth-child(1) { animation-delay: 0.1s; }
+        .nav-links li:nth-child(2) { animation-delay: 0.2s; }
+        .nav-links li:nth-child(3) { animation-delay: 0.3s; }
+        .nav-links li:nth-child(4) { animation-delay: 0.4s; }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding: 5px 0;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: var(--transition);
+        }
+        
+        .nav-links a:hover {
+            color: var(--secondary);
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .nav-icons {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .nav-icons a {
+            color: var(--text);
+            text-decoration: none;
+            position: relative;
+            transition: var(--transition);
+            font-size: 1.1rem;
+        }
+        
+        .nav-icons a:hover {
+            color: var(--secondary);
+            transform: translateY(-3px);
+        }
+        
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .mobile-toggle {
+            display: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: var(--text);
+            z-index: 2;
+        }
+        
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding: 180px 0 100px;
+            background-color: var(--darker);
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 50%, rgba(108, 92, 231, 0.1), transparent 60%);
+            z-index: 0;
+        }
+        
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-content {
+            opacity: 0;
+            animation: slideInLeft 1s forwards;
+            animation-delay: 0.5s;
+        }
+        
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 30px;
+            line-height: 1.1;
+            background: linear-gradient(45deg, var(--primary) 30%, var(--secondary) 70%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            background-size: 300% 300%;
+            animation: gradient 8s ease infinite;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            line-height: 1.8;
+            max-width: 90%;
+        }
+        
+        .hero-image {
+            position: relative;
+            opacity: 0;
+            animation: slideInRight 1s forwards;
+            animation-delay: 0.7s;
+        }
+        
+        .hero-image img {
+            width: 100%;
+            border-radius: 20px;
+            object-fit: cover;
+            animation: float 8s ease-in-out infinite;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+        }
+        
+        .hero-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 20px;
+            background: linear-gradient(45deg, rgba(108, 92, 231, 0.5), rgba(0, 210, 211, 0.5));
+            opacity: 0.6;
+            mix-blend-mode: overlay;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 16px 36px;
+            background-color: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            box-shadow: 0 10px 30px rgba(108, 92, 231, 0.3);
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            transition: var(--transition);
+            z-index: -1;
+        }
+        
+        .btn:hover::before {
+            width: 100%;
+        }
+        
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(108, 92, 231, 0.5);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--secondary);
+            color: var(--secondary);
+            margin-left: 20px;
+            box-shadow: none;
+        }
+        
+        .btn-outline::before {
+            background: var(--secondary);
+        }
+        
+        .btn-outline:hover {
+            color: white;
+            box-shadow: 0 15px 30px rgba(0, 210, 211, 0.3);
+        }
+        
+        .discount-badge {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: linear-gradient(45deg, var(--accent), var(--primary));
+            color: white;
+            padding: 15px;
+            border-radius: 50%;
+            font-weight: 700;
+            width: 90px;
+            height: 90px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            animation: pulse 2s infinite;
+            box-shadow: 0 10px 30px rgba(255, 118, 117, 0.5);
+            z-index: 1;
+        }
+        
+        .discount-badge span {
+            font-size: 0.9rem;
+        }
+        
+        /* Features Section */
+        .features {
+            padding: 120px 0;
+            background-color: var(--dark);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .features::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(108, 92, 231, 0.15), transparent 70%);
+            border-radius: 50%;
+        }
+        
+        .features::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(0, 210, 211, 0.15), transparent 70%);
+            border-radius: 50%;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 80px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .section-title h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            display: inline-block;
+        }
+        
+        .section-title p {
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .feature-card {
+            background-color: var(--dark-card);
+            border-radius: var(--radius);
+            padding: 40px 30px;
+            text-align: center;
+            transition: var(--transition);
+            opacity: 0;
+            transform: translateY(30px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .feature-card.animated {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, transparent, rgba(108, 92, 231, 0.03), transparent);
+            transition: var(--transition);
+            opacity: 0;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .feature-card:hover::before {
+            opacity: 1;
+        }
+        
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, rgba(108, 92, 231, 0.2), rgba(0, 210, 211, 0.2));
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 25px;
+            font-size: 32px;
+            transition: var(--transition);
+        }
+        
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1) rotate(10deg);
+            background: linear-gradient(45deg, rgba(108, 92, 231, 0.4), rgba(0, 210, 211, 0.4));
+        }
+        
+        .feature-card h3 {
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+            color: var(--text);
+            transition: var(--transition);
+        }
+        
+        .feature-card:hover h3 {
+            color: var(--secondary);
+        }
+        
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        
+        /* Products Section */
+        .products {
+            padding: 120px 0;
+            background-color: var(--darker);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .products::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(108, 92, 231, 0.1), transparent 60%);
+            border-radius: 50%;
+            z-index: 0;
+        }
+        
+        .product-filters {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 60px;
+            gap: 15px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .filter-btn {
+            padding: 12px 25px;
+            background-color: var(--dark-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+            color: var(--text);
+        }
+        
+        .filter-btn.active, .filter-btn:hover {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 10px 20px rgba(108, 92, 231, 0.3);
+            transform: translateY(-3px);
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 40px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .product-card {
+            background-color: var(--dark-card);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+            position: relative;
+            opacity: 0;
+            transform: translateY(30px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .product-card.animated {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .product-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .product-image {
+            position: relative;
+            height: 260px;
+            overflow: hidden;
+        }
+        
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease-in-out;
+        }
+        
+        .product-card:hover .product-image img {
+            transform: scale(1.1);
+        }
+        
+        .product-tag {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            padding: 8px 15px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            z-index: 1;
+        }
+        
+        .tag-new {
+            background: linear-gradient(45deg, var(--primary), #8c7ae6);
+            color: white;
+            box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3);
+        }
+        
+        .tag-sale {
+            background: linear-gradient(45deg, var(--accent), #ff9f43);
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 118, 117, 0.3);
+        }
+        
+        .product-actions {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: var(--transition);
+            z-index: 1;
+        }
+        
+        .product-card:hover .product-actions {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .action-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: rgba(30, 30, 30, 0.9);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .action-btn:hover {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            transform: translateY(-3px) rotate(10deg);
+            box-shadow: 0 10px 20px rgba(108, 92, 231, 0.3);
+        }
+        
+        .product-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(10, 10, 10, 0.8), transparent);
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .product-card:hover .product-image::after {
+            opacity: 1;
+        }
+        
+        .product-info {
+            padding: 25px;
+        }
+        
+        .product-category {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .product-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+        
+        .product-card:hover .product-title {
+            color: var(--secondary);
+        }
+        
+        .product-price {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .current-price {
+            font-weight: 700;
+            font-size: 1.3rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .old-price {
+            text-decoration: line-through;
+            color: var(--text-secondary);
+            margin-left: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .add-to-cart {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .add-to-cart::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: linear-gradient(45deg, var(--secondary), var(--primary));
+            transition: var(--transition);
+            z-index: -1;
+        }
+        
+        .add-to-cart:hover::before {
+            width: 100%;
+        }
+        
+        .add-to-cart:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(108, 92, 231, 0.3);
+        }
+        
+        /* Testimonials Section */
+        .testimonials {
+            padding: 120px 0;
+            background-color: var(--dark);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .testimonials::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(0, 210, 211, 0.1), transparent 70%);
+            border-radius: 50%;
+        }
+        
+        .testimonial-slider {
+            max-width: 900px;
+            margin: 0 auto;
+            overflow: hidden;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .testimonial-wrapper {
+            display: flex;
+            transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        
+        .testimonial {
+            min-width: 100%;
+            padding: 50px 30px;
+            text-align: center;
+            opacity: 0.8;
+            transition: var(--transition);
+            transform: scale(0.9);
+        }
+        
+        .testimonial.active {
+            opacity: 1;
+            transform: scale(1);
+        }
+        
+        .testimonial-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 25px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .testimonial-avatar::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border: 3px solid transparent;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary), var(--secondary)) border-box;
+            mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: source-out;
+            mask-composite: exclude;
+        }
+        
+        .testimonial-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .testimonial-quote {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: var(--text);
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .testimonial-quote::before,
+        .testimonial-quote::after {
+            content: '"';
+            font-size: 3rem;
+            font-family: Georgia, serif;
+            color: var(--primary);
+            opacity: 0.3;
+            position: absolute;
+        }
+        
+        .testimonial-quote::before {
+            top: -20px;
+            left: -10px;
+        }
+        
+        .testimonial-quote::after {
+            bottom: -40px;
+            right: -10px;
+            transform: rotate(180deg);
+        }
+        
+        .testimonial-author {
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        
+        .testimonial-role {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        .slider-controls {
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
+            gap: 10px;
+        }
+        
+        .slider-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--dark-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .slider-btn:hover {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(108, 92, 231, 0.3);
+        }
+        
+        .slider-indicators {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+            gap: 10px;
+        }
+        
+        .indicator {
+            width: 40px;
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 2px;
+            cursor: pointer;
+            transition: var(--transition);
+            overflow: hidden;
+        }
+        
+        .indicator::after {
+            content: '';
+            display: block;
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: var(--transition);
+        }
+        
+        .indicator.active::after {
+            width: 100%;
+        }
+        
+        /* Newsletter Section */
+        .newsletter {
+            padding: 100px 0;
+            background-color: var(--darker);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .newsletter::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(108, 92, 231, 0.1), transparent 70%);
+            border-radius: 50%;
+        }
+        
+        .newsletter::after {
+            content: '';
+            position: absolute;
+            bottom: -50%;
+            right: -10%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0, 210, 211, 0.1), transparent 70%);
+            border-radius: 50%;
+        }
+        
+        .newsletter-content {
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .newsletter h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .newsletter p {
+            max-width: 600px;
+            margin: 0 auto 40px;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .newsletter-form {
+            display: flex;
+            max-width: 500px;
+            margin: 0 auto;
+            background-color: var(--dark-card);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+        
+        .newsletter-form::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, rgba(108, 92, 231, 0.05), rgba(0, 210, 211, 0.05));
+            opacity: 0;
+            transition: var(--transition);
+        }
+        
+        .newsletter-form:focus-within::before {
+            opacity: 1;
+        }
+        
+        .newsletter-form input {
+            flex: 1;
+            padding: 20px;
+            background-color: transparent;
+            border: none;
+            color: var(--text);
+            font-size: 1rem;
+            outline: none;
+        }
+        
+        .newsletter-form input::placeholder {
+            color: var(--text-secondary);
+        }
+        
+        .newsletter-form button {
+            padding: 0 30px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .newsletter-form button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            background: linear-gradient(45deg, var(--secondary), var(--primary));
+            transition: var(--transition);
+            z-index: -1;
+        }
+        
+        .newsletter-form button:hover::before {
+            width: 100%;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: var(--text);
+            padding: 80px 0 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary), var(--secondary), transparent);
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 50px;
+            margin-bottom: 60px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 15px;
+            display: inline-block;
+        }
+        
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 15px;
+            transition: var(--transition);
+        }
+        
+        .footer-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: var(--transition);
+            position: relative;
+            display: inline-block;
+            padding-left: 0;
+        }
+        
+        .footer-links a::before {
+            content: '→';
+            position: absolute;
+            left: -20px;
+            opacity: 0;
+            transition: var(--transition);
+            color: var(--secondary);
+        }
+        
+        .footer-links a:hover {
+            color: var(--text);
+            padding-left: 20px;
+        }
+        
+        .footer-links a:hover::before {
+            opacity: 1;
+            left: 0;
+        }
+        
+        .footer-contact p {
+            margin-bottom: 15px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+        }
+        
+        .footer-contact p:hover {
+            color: var(--text);
+            transform: translateX(5px);
+        }
+        
+        .footer-contact p i {
+            margin-right: 15px;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+        
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .social-icon {
+            width: 45px;
+            height: 45px;
+            background-color: var(--dark-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: var(--transition);
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+        }
+        
+        .social-icon:hover {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            transform: translateY(-5px) rotate(10deg);
+            box-shadow: 0 10px 20px rgba(108, 92, 231, 0.3);
+        }
+        
+        .footer-bottom {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 25px 0;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .footer-bottom p {
+            color: var(--text-secondary);
+        }
+        
+        .footer-bottom span {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        /* Responsive Styles */
+        @media (max-width: 1200px) {
+            .hero h1 {
+                font-size: 3.5rem;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .hero h1 {
+                font-size: 3rem;
+            }
+            
+            .hero p {
+                margin: 0 auto 40px;
+            }
+            
+            .hero-content {
+                order: 2;
+            }
+            
+            .hero-image {
+                order: 1;
+                margin-bottom: 50px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-toggle {
+                display: block;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 80%;
+                height: 100vh;
+                background-color: var(--darker);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                transition: var(--transition);
+                box-shadow: -5px 0 30px rgba(0, 0, 0, 0.3);
+                z-index: 1;
+            }
+            
+            .nav-links.active {
+                right: 0;
+            }
+            
+            .nav-links li {
+                margin: 20px 0;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .features-grid, .products-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            }
+            
+            .section-title h2 {
+                font-size: 2.5rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .btn {
+                display: block;
+                width: 100%;
+                margin-bottom: 15px;
+            }
+            
+            .btn-outline {
+                margin-left: 0;
+            }
+            
+            .newsletter-form {
+                flex-direction: column;
+            }
+            
+            .newsletter-form button {
+                width: 100%;
+                padding: 15px;
+            }
+        }
+        
+        /* Animation class for scroll animation */
+        .animate-on-scroll {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: var(--transition);
+        }
+        
+        .animate-on-scroll.animated {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Floating Elements */
+        .floating-element {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            opacity: 0.1;
+            filter: blur(20px);
+            z-index: 0;
+            animation: float 15s ease-in-out infinite alternate;
+        }
+        
+        /* Loading Animation */
+        .loading-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            z-index: 2000;
+            width: 0;
+            transition: width 0.3s;
+        }
+        
+        /* Overlay when mobile menu is open */
+        .menu-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+        }
+        
+        .menu-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        /* Page transition */
+        .page-transition {
+            position: fixed;
+            inset: 0;
+            background-color: var(--darker);
+            z-index: 9999;
+            transform: translateY(100%);
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+        
+        .page-transition.active {
+            transform: translateY(0);
+        }
+        
+        /* Custom cursor */
+        .custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: rgba(108, 92, 231, 0.3);
+            pointer-events: none;
+            mix-blend-mode: screen;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s, width 0.3s, height 0.3s, background-color 0.3s;
+        }
+        
+        .custom-cursor.active {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(108, 92, 231, 0.1);
+        }
+        
+        /* Scroll Progress Indicator */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            right: 20px;
+            width: 3px;
+            height: 100vh;
+            background-color: rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+        }
+        
+        .scroll-progress-indicator {
+            width: 100%;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+            height: 0;
+            transition: height 0.1s;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Bar -->
+    <div class="loading-bar" id="loadingBar"></div>
+    
+    <!-- Custom Cursor -->
+    <div class="custom-cursor" id="customCursor"></div>
+    
+    <!-- Scroll Progress -->
+    <div class="scroll-progress">
+        <div class="scroll-progress-indicator" id="scrollProgress"></div>
+    </div>
+    
+    <!-- Menu Overlay -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+    
+    <!-- Page Transition -->
+    <div class="page-transition" id="pageTransition"></div>
+    
+    <!-- Floating Elements -->
+    <div class="floating-element" style="width: 300px; height: 300px; top: 20%; left: 10%;"></div>
+    <div class="floating-element" style="width: 200px; height: 200px; bottom: 10%; right: 5%; animation-delay: 2s;"></div>
+    <div class="floating-element" style="width: 150px; height: 150px; top: 60%; left: 50%; animation-delay: 4s;"></div>
+    
+    <!-- Header -->
+    <header id="header">
+        <div class="container">
+            <div class="navbar">
+                <a href="#" class="logo">Neo<span>Shop</span></a>
+                
+                <div class="mobile-toggle" id="mobileToggle">
+                    ☰
+                </div>
+                
+                <ul class="nav-links" id="navLinks">
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Shop</a></li>
+                    <li><a href="#">Collections</a></li>
+                    <li><a href="#">About</a></li>
+                </ul>
+                
+                <div class="nav-icons">
+                    <a href="#">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="5"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                          </svg>
+                          
+                    </a>
+                    <a href="#">👤</a>
+                    <a href="#">
+                        🛒
+                        <span class="cart-count">3</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-grid">
+                <div class="hero-content">
+                    <h1>Discover Future of Online Shopping</h1>
+                    <p>Experience next-generation e-commerce with cutting-edge design, seamless shopping, and premium products curated for the modern lifestyle.</p>
+                    <a href="#" class="btn">Explore Collection</a>
+                    <a href="#" class="btn btn-outline">View Trending</a>
+                </div>
+                <div class="hero-image">
+                    <img src="https://assets.grok.com/users/f3a4881b-85ac-456d-8b32-d2962a918dae/generated/3iLCLo03Kma2vBMS/image.jpg" alt="Hero Image">
+                    <div class="discount-badge">
+                        40% <span>OFF</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Why Choose Us</h2>
+                <p>Discover the advantages that set us apart and make your shopping experience exceptional</p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card" data-delay="0">
+                    <div class="feature-icon">🚚</div>
+                    <h3>Global Shipping</h3>
+                    <p>Fast and free shipping on orders over $50. Track your package in real-time with our advanced logistics system.</p>
+                </div>
+                
+                <div class="feature-card" data-delay="200">
+                    <div class="feature-icon">↩️</div>
+                    <h3>Easy Returns</h3>
+                    <p>Hassle-free 30-day returns with no questions asked. We prioritize your satisfaction above all else.</p>
+                </div>
+                
+                <div class="feature-card" data-delay="400">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Secure Checkout</h3>
+                    <p>Advanced encryption and multi-layer security protocols ensure your payment and personal data remain private.</p>
+                </div>
+                
+                <div class="feature-card" data-delay="600">
+                    <div class="feature-icon">💬</div>
+                    <h3>24/7 Support</h3>
+                    <p>Our dedicated support team is always available to assist you with any questions or concerns you may have.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Products Section -->
+    <section class="products">
+        <div class="container">
+            <div class="section-title">
+                <h2>Featured Products</h2>
+                <p>Explore our curated collection of premium products designed for your modern lifestyle</p>
+            </div>
+            
+            <div class="product-filters">
+                <button class="filter-btn active">All</button>
+                <button class="filter-btn">New Arrivals</button>
+                <button class="filter-btn">Best Sellers</button>
+                <button class="filter-btn">Special Offers</button>
+            </div>
+            
+            <div class="products-grid">
+                <!-- Product 1 -->
+                <div class="product-card" data-delay="0">
+                    <div class="product-image">
+                        <img src="https://mediawalletbucket.s3.eu-north-1.amazonaws.com/image+(9).jpg" alt="Product 1">
+                        <span class="product-tag tag-new">New</span>
+                        <div class="product-actions">
+                            <span class="action-btn">❤️</span>
+                            <span class="action-btn">👁️</span>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">Clothing</div>
+                        <h3 class="product-title">Premium Tech Jacket</h3>
+                        <div class="product-price">
+                            <span class="current-price">$129.99</span>
+                            <span class="old-price">$179.99</span>
+                        </div>
+                        <button class="add-to-cart">Add to Cart</button>
+                    </div>
+                </div>
+                
+                <!-- Product 2 -->
+                <div class="product-card" data-delay="200">
+                    <div class="product-image">
+                        <img src="https://mediawalletbucket.s3.eu-north-1.amazonaws.com/image+(11).jpg" alt="Product 2">
+                        <span class="product-tag tag-sale">Sale</span>
+                        <div class="product-actions">
+                            <span class="action-btn">❤️</span>
+                            <span class="action-btn">👁️</span>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">Accessories</div>
+                        <h3 class="product-title">Smart Watch Pro</h3>
+                        <div class="product-price">
+                            <span class="current-price">$199.99</span>
+                            <span class="old-price">$249.99</span>
+                        </div>
+                        <button class="add-to-cart">Add to Cart</button>
+                    </div>
+                </div>
+                
+                <!-- Product 3 -->
+                <div class="product-card" data-delay="400">
+                    <div class="product-image">
+                        <img src="https://mediawalletbucket.s3.eu-north-1.amazonaws.com/image+(13).jpg" alt="Product 3">
+                        <div class="product-actions">
+                            <span class="action-btn">❤️</span>
+                            <span class="action-btn">👁️</span>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">Footwear</div>
+                        <h3 class="product-title">Ultra Comfort Sneakers</h3>
+                        <div class="product-price">
+                            <span class="current-price">$89.99</span>
+                        </div>
+                        <button class="add-to-cart">Add to Cart</button>
+                    </div>
+                </div>
+                
+                <!-- Product 4 -->
+                <div class="product-card" data-delay="600">
+                    <div class="product-image">
+                        <img src="https://mediawalletbucket.s3.eu-north-1.amazonaws.com/image+(14).jpg" alt="Product 4">
+                        <span class="product-tag tag-sale">Sale</span>
+                        <div class="product-actions">
+                            <span class="action-btn">❤️</span>
+                            <span class="action-btn">👁️</span>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <div class="product-category">Electronics</div>
+                        <h3 class="product-title">Wireless Noise-Canceling Earbuds</h3>
+                        <div class="product-price">
+                            <span class="current-price">$89.99</span>
+                            <span class="old-price">$129.99</span>
+                        </div>
+                        <button class="add-to-cart">Add to Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Testimonials Section -->
+    <section class="testimonials">
+        <div class="container">
+            <div class="section-title">
+                <h2>What Our Customers Say</h2>
+                <p>Read genuine reviews from our valued customers around the world</p>
+            </div>
+            
+            <div class="testimonial-slider">
+                <div class="testimonial-wrapper" id="testimonialWrapper">
+                    <!-- Testimonial 1 -->
+                    <div class="testimonial active">
+                        <div class="testimonial-avatar">
+                            <img src="/api/placeholder/200/200" alt="Customer 1">
+                        </div>
+                        <p class="testimonial-quote">The quality of products from NeoShop is exceptional. Their attention to detail and customer service has made me a loyal customer. The shipping is lightning fast!</p>
+                        <h4 class="testimonial-author">Alex Morgan</h4>
+                        <p class="testimonial-role">Tech Enthusiast</p>
+                    </div>
+                    
+                    <!-- Testimonial 2 -->
+                    <div class="testimonial">
+                        <div class="testimonial-avatar">
+                            <img src="/api/placeholder/200/200" alt="Customer 2">
+                        </div>
+                        <p class="testimonial-quote">The seamless shopping experience and easy return policy made my experience stress-free. The products are exactly as described and exceed expectations!</p>
+                        <h4 class="testimonial-author">Sophia Chen</h4>
+                        <p class="testimonial-role">Fashion Designer</p>
+                    </div>
+                    
+                    <!-- Testimonial 3 -->
+                    <div class="testimonial">
+                        <div class="testimonial-avatar">
+                            <img src="/api/placeholder/200/200" alt="Customer 3">
+                        </div>
+                        <p class="testimonial-quote">NeoShop's collection is always up-to-date with the latest trends. Their customer support team resolved my issue within minutes. Highly recommend!</p>
+                        <h4 class="testimonial-author">Marcus Johnson</h4>
+                        <p class="testimonial-role">Creative Director</p>
+                    </div>
+                </div>
+                
+                <div class="slider-controls">
+                    <button class="slider-btn" id="prevBtn">←</button>
+                    <button class="slider-btn" id="nextBtn">→</button>
+                </div>
+                
+                <div class="slider-indicators" id="sliderIndicators">
+                    <span class="indicator active" data-index="0"></span>
+                    <span class="indicator" data-index="1"></span>
+                    <span class="indicator" data-index="2"></span>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Newsletter Section -->
+    <section class="newsletter">
+        <div class="container">
+            <div class="newsletter-content">
+                <h2>Stay Updated</h2>
+                <p>Subscribe to our newsletter for exclusive deals, new arrivals, and insider tips delivered directly to your inbox.</p>
+                
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Enter your email address" required>
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>About NeoShop</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 20px; line-height: 1.6;">We are dedicated to providing the best shopping experience with premium quality products at competitive prices.</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="7" y="2" width="10" height="20" rx="2"></rect>
+                            <line x1="12" y1="18" x2="12" y2="18"></line>
+                          </svg>
+                          </a>
+                        <a href="#" class="social-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="3" y="4" width="18" height="12" rx="2"></rect>
+                                <path d="M2 18h20"></path>
+                              </svg>
+                              
+                        </a>
+                        <a href="#" class="social-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 8V19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8"></path>
+                                <path d="M16 3h-8l-2 5H5"></path>
+                                <circle cx="12" cy="13" r="4"></circle>
+                              </svg>
+                              
+                        </a>
+                        <a href="#" class="social-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="6" y="4" width="12" height="16" rx="2"></rect>
+                                <circle cx="12" cy="14" r="4"></circle>
+                                <circle cx="12" cy="7" r="1"></circle>
+                              </svg>
+                              
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Shop</a></li>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">FAQs</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Customer Service</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Track Order</a></li>
+                        <li><a href="#">Return Policy</a></li>
+                        <li><a href="#">Shipping Info</a></li>
+                        <li><a href="#">Size Guide</a></li>
+                        <li><a href="#">Help Center</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column footer-contact">
+                    <h3>Contact Us</h3>
+                    <p><i><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 21s-6-5.33-6-10a6 6 0 1 1 12 0c0 4.67-6 10-6 10z"></path>
+                        <circle cx="12" cy="11" r="3"></circle>
+                      </svg>
+                      </i> 123 Tech Avenue, San Francisco, USA</p>
+                    <p><i><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.86 19.86 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.86 19.86 0 0 1 2.08 5.18 2 2 0 0 1 4 3h3a2 2 0 0 1 2 1.72 12.8 12.8 0 0 0 .7 2.8 2 2 0 0 1-.45 2.11l-1.2 1.21a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.12-.46 12.8 12.8 0 0 0 2.8.7A2 2 0 0 1 22 16.92z"></path>
+                      </svg>
+                      </i> +1 (234) 567-890</p>
+                    <p><i><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                        <path d="M2 4l10 8 10-8"></path>
+                      </svg>
+                      </i> support@neoshop.com</p>
+                    <p><i><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 6v6l4 2"></path>
+                      </svg>
+                      </i> 24/7 Customer Support</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <div class="container">
+                <p>&copy; 2025 <span>NeoShop</span>. All rights reserved. Designed with ❤️</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- JavaScript -->
+    <script>
+        // Loading Bar Animation
+        const loadingBar = document.getElementById('loadingBar');
+        let width = 0;
+        const loadingInterval = setInterval(() => {
+            if (width >= 100) {
+                clearInterval(loadingInterval);
+                setTimeout(() => {
+                    loadingBar.style.opacity = '0';
+                    // Animate page transition exit
+                    document.getElementById('pageTransition').classList.remove('active');
+                }, 500);
+            } else {
+                width += 1;
+                loadingBar.style.width = width + '%';
+            }
+        }, 10);
+        
+        // Page load animation
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('pageTransition').classList.add('active');
+        });
+        
+        // Mobile Menu Toggle
+        const mobileToggle = document.getElementById('mobileToggle');
+        const navLinks = document.getElementById('navLinks');
+        const menuOverlay = document.getElementById('menuOverlay');
+        
+        mobileToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            menuOverlay.classList.toggle('active');
+            document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : '';
+        });
+        
+        menuOverlay.addEventListener('click', () => {
+            navLinks.classList.remove('active');
+            menuOverlay.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+        
+        // Header Scroll Effect
+        const header = document.getElementById('header');
+        
+        function updateHeaderOnScroll() {
+            if (window.scrollY > 100) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        }
+        
+        // Scroll Progress Indicator
+        const scrollProgress = document.getElementById('scrollProgress');
+        
+        function updateScrollProgress() {
+            const totalHeight = document.body.scrollHeight - window.innerHeight;
+            const progress = (window.scrollY / totalHeight) * 100;
+            scrollProgress.style.height = `${progress}%`;
+        }
+        
+        // Custom Cursor
+        const customCursor = document.getElementById('customCursor');
+        let cursorTimeout;
+        
+        document.addEventListener('mousemove', (e) => {
+            customCursor.style.left = `${e.clientX}px`;
+            customCursor.style.top = `${e.clientY}px`;
+            
+            customCursor.style.opacity = '1';
+            
+            clearTimeout(cursorTimeout);
+            cursorTimeout = setTimeout(() => {
+                customCursor.style.opacity = '0';
+            }, 3000);
+        });
+        
+        document.addEventListener('mousedown', () => {
+            customCursor.classList.add('active');
+        });
+        
+        document.addEventListener('mouseup', () => {
+            customCursor.classList.remove('active');
+        });
+        
+        // Elements that should change the cursor
+        const cursorTargets = document.querySelectorAll('a, button, .product-card, .feature-card');
+        
+        cursorTargets.forEach(target => {
+            target.addEventListener('mouseenter', () => {
+                customCursor.classList.add('active');
+            });
+            
+            target.addEventListener('mouseleave', () => {
+                customCursor.classList.remove('active');
+            });
+        });
+        
+        // Animation on Scroll
+        const animateElements = document.querySelectorAll('.feature-card, .product-card, .animate-on-scroll');
+        
+        function checkScroll() {
+            animateElements.forEach(element => {
+                const elementPosition = element.getBoundingClientRect().top;
+                const screenPosition = window.innerHeight / 1.2;
+                
+                if (elementPosition < screenPosition) {
+                    setTimeout(() => {
+                        element.classList.add('animated');
+                    }, parseInt(element.dataset.delay) || 0);
+                }
+            });
+            
+            // Update header and scroll progress on scroll
+            updateHeaderOnScroll();
+            updateScrollProgress();
+        }
+        
+        // Initial check for elements in viewport
+        checkScroll();
+        
+        // Check on scroll
+        window.addEventListener('scroll', checkScroll);
+        
+        // Testimonial Slider
+        const testimonialWrapper = document.getElementById('testimonialWrapper');
+        const testimonials = document.querySelectorAll('.testimonial');
+        const indicators = document.querySelectorAll('.indicator');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        let currentSlide = 0;
+        
+        const updateSlider = () => {
+            testimonialWrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+            
+            testimonials.forEach((testimonial, index) => {
+                if (index === currentSlide) {
+                    testimonial.classList.add('active');
+                } else {
+                    testimonial.classList.remove('active');
+                }
+            });
+            
+            indicators.forEach((indicator, index) => {
+                if (index === currentSlide) {
+                    indicator.classList.add('active');
+                } else {
+                    indicator.classList.remove('active');
+                }
+            });
+        };
+        
+        prevBtn.addEventListener('click', () => {
+            currentSlide = (currentSlide - 1 + testimonials.length) % testimonials.length;
+            updateSlider();
+        });
+        
+        nextBtn.addEventListener('click', () => {
+            currentSlide = (currentSlide + 1) % testimonials.length;
+            updateSlider();
+        });
+        
+        indicators.forEach(indicator => {
+            indicator.addEventListener('click', () => {
+                currentSlide = parseInt(indicator.dataset.index);
+                updateSlider();
+            });
+        });
+        
+        // Auto-slide testimonials
+        let testimonialInterval = setInterval(() => {
+            currentSlide = (currentSlide + 1) % testimonials.length;
+            updateSlider();
+        }, 6000);
+        
+        // Pause auto-slide on hover
+        testimonialWrapper.addEventListener('mouseenter', () => {
+            clearInterval(testimonialInterval);
+        });
+        
+        testimonialWrapper.addEventListener('mouseleave', () => {
+            testimonialInterval = setInterval(() => {
+                currentSlide = (currentSlide + 1) % testimonials.length;
+                updateSlider();
+            }, 6000);
+        });
+        
+        // Add to cart button animation
+        const addToCartButtons = document.querySelectorAll('.add-to-cart');
+        
+        addToCartButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                this.innerHTML = 'Added ✓';
+                this.style.background = 'linear-gradient(45deg, #06d6a0, #1b9aaa)';
+                
+                setTimeout(() => {
+                    this.innerHTML = 'Add to Cart';
+                    this.style.background = '';
+                }, 2000);
+            });
+        });
+        
+        // Product Filter Buttons
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Here you would normally filter products based on category
+                // For this demo, we'll just reset and animate all products
+                const productCards = document.querySelectorAll('.product-card');
+                productCards.forEach(card => {
+                    card.classList.remove('animated');
+                    setTimeout(() => {
+                        checkScroll();
+                    }, 100);
+                });
+            });
+        });
+        
+        // Newsletter form submission
+        const newsletterForm = document.querySelector('.newsletter-form');
+        
+        newsletterForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const emailInput = this.querySelector('input');
+            const submitBtn = this.querySelector('button');
+            
+            if (emailInput.value) {
+                emailInput.value = '';
+                submitBtn.innerHTML = 'Subscribed ✓';
+                
+                setTimeout(() => {
+                    submitBtn.innerHTML = 'Subscribe';
+                }, 2000);
+            }
+        });
+        
+        // Parallax effect on scroll
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            
+            // Parallax for hero section
+            document.querySelector('.hero-image').style.transform = `translateY(${scrollY * 0.1}px) rotate(${scrollY * 0.01}deg)`;
+            
+            // Parallax for floating elements
+            document.querySelectorAll('.floating-element').forEach((element, index) => {
+                const speed = 0.05 + (index * 0.02);
+                element.style.transform = `translateY(${scrollY * speed}px) rotate(${scrollY * 0.01}deg)`;
+            });
+        });
+        
+        // Add smooth scrolling for all links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 100,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Page transition for links
+        document.querySelectorAll('a:not([href^="#"])').forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Only apply to links that stay on the same site
+                if (this.hostname === window.location.hostname) {
+                    e.preventDefault();
+                    const href = this.getAttribute('href');
+                    
+                    document.getElementById('pageTransition').classList.add('active');
+                    
+                    setTimeout(() => {
+                        window.location.href = href;
+                    }, 800);
+                }
+            });
+        });
+        
+        // Initialize
+        updateHeaderOnScroll();
+        updateScrollProgress();
+    </script>
+</body>
+</html>
+
+                
